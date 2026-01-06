@@ -1,0 +1,17 @@
+@import url("https://fonts.googleapis.com/css2?family=Merienda:wght@300..900&family=Quintessential&display=swap");
+
+body {
+  background-image: url("../public/oldpergamen.jpg");
+  background-size: cover;
+  background-position: center;
+  background-repeat: no-repeat;
+}
+
+h1 {
+  font-family: "Merienda", cursive;
+  font-size: 4rem;
+}
+
+p {
+  
+}
