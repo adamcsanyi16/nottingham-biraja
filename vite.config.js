@@ -7,7 +7,7 @@ export default defineConfig({
     react({
       babel: {
         plugins: [["babel-plugin-react-compiler"]],
-        base: "/nottingham/",
+        base: "/nottingham-biraja/",
       },
     }),
   ],
