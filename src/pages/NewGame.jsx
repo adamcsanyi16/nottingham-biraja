@@ -1,6 +1,12 @@
 import React, { useState, useEffect } from "react";
 import { useNavigate } from "react-router-dom";
 import "./NewGame.css";
+import alma from "../assets/alma.jpg";
+import kenyer from "../assets/kenyer.jpg";
+import sajt from "../assets/sajt.jpg";
+import csirke from "../assets/csirke.jpg";
+import bors from "../assets/bors.jpg";
+import penz from "../assets/penz.png";
 
 export default function NewGame() {
   const [playerCount, setPlayerCount] = useState(null);
@@ -75,11 +81,12 @@ export default function NewGame() {
               marginRight: "10px",
               padding: "10px 15px",
               cursor: "pointer",
-              backgroundColor: playerCount === n ? "rgba(143, 86, 50, 1)" : "transparent",
+              backgroundColor:
+                playerCount === n ? "rgba(143, 86, 50, 1)" : "transparent",
               color: playerCount === n ? "white" : "black",
             }}
           >
-            {n} játékos
+            {n} <span className="jatekos-text">játékos</span>
           </button>
         ))}
       </div>
@@ -101,14 +108,18 @@ export default function NewGame() {
                   borderRadius: "8px",
                   padding: "40px",
                   border: "2px solid #1A1A1A",
-                  minWidth: "250px",
+                  minWidth: "220px",
                   backgroundColor: "#f9f9f9",
                   flex: "0 0 auto",
                 }}
               >
                 <h3 style={{ textAlign: "center" }}>Játékos {i + 1}</h3>
 
-                <div style={{ marginBottom: "10px" }}>
+                <div
+                  style={{
+                    marginBottom: "10px",
+                  }}
+                >
                   <label>
                     <input
                       type="text"
@@ -128,14 +139,29 @@ export default function NewGame() {
                   }}
                 >
                   {[
-                    ["apple", "Alma", smallRange],
-                    ["cheese", "Sajt", smallRange],
-                    ["bread", "Kenyér", smallRange],
-                    ["chicken", "Csirke", smallRange],
-                    ["money", "Pénz", bigRange],
-                    ["contraband", "Csempészáru", bigRange],
-                  ].map(([key, label, range]) => (
-                    <label key={key}>
+                    ["apple", "Alma", smallRange, alma],
+                    ["cheese", "Sajt", smallRange, sajt],
+                    ["bread", "Kenyér", smallRange, kenyer],
+                    ["chicken", "Csirke", smallRange, csirke],
+                    ["money", "Pénz", bigRange, penz],
+                    ["contraband", "Csempészáru", bigRange, bors],
+                  ].map(([key, label, range, image]) => (
+                    <label
+                      key={key}
+                      style={{
+                        display: "flex",
+                        alignItems: "center",
+                        justifyContent: "center",
+                        gap: "5px",
+                      }}
+                    >
+                      {image && (
+                        <img
+                          src={image}
+                          alt={label}
+                          style={{ width: "45px", borderRadius: "2px" }}
+                        />
+                      )}
                       {label}:{" "}
                       <select
                         value={player[key]}
@@ -163,7 +189,7 @@ export default function NewGame() {
               gap: "8px",
             }}
           >
-            <button type="submit" >Számlálás indítása</button>
+            <button type="submit">Számlálás indítása</button>
             <button type="button" onClick={handleReset}>
               Újrakezdés
             </button>

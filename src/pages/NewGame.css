@@ -1,6 +1,6 @@
 .input {
   width: 100%;
-  max-width: 220px;
+  max-width: 200px;
   height: 15px;
   padding: 10px;
   border-radius: 12px;
@@ -85,4 +85,39 @@ button:hover {
 button:active {
   box-shadow: none;
   transform: translateY(0);
+}
+
+@media (max-width: 900px) {
+  button {
+    font-size: 15px;
+    padding: 0.9em 1.8em;
+    min-height: 3.2em;
+  }
+}
+
+@media (max-width: 600px) {
+  .jatekos-text {
+    display: none;
+  }
+
+  button {
+    font-size: 14px;
+    padding: 0.7em 1.2em;
+    min-height: 2.8em;
+    border-radius: 0.7em;
+  }
+
+  button:hover {
+    background-color: transparent;
+    color: #1a1a1a;
+    box-shadow: none;
+    transform: none;
+  }
+}
+
+@media (max-width: 400px) {
+  button {
+    font-size: 13px;
+    padding: 0.6em 1em;
+  }
 }

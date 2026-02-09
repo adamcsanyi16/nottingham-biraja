@@ -1,12 +1,64 @@
 import React, { useEffect, useState } from "react";
 import { useNavigate } from "react-router-dom";
 
+import alma from "../assets/alma.jpg";
+import kenyer from "../assets/kenyer.jpg";
+import sajt from "../assets/sajt.jpg";
+import csirke from "../assets/csirke.jpg";
+import bors from "../assets/bors.jpg";
+import penz from "../assets/penz.png";
+
 export default function Results() {
   const [results, setResults] = useState([]);
+  const [playerCount, setPlayerCount] = useState(null);
   const navigate = useNavigate();
+
+  const bonusConfig = {
+    apple: { king: 20, queen: 10 },
+    cheese: { king: 15, queen: 10 },
+    bread: { king: 15, queen: 10 },
+    chicken: { king: 10, queen: 5 },
+  };
+
+  function applyBonuses(players, good, kingBonus, queenBonus) {
+    const sorted = [...players].sort((a, b) => b[good] - a[good]);
+
+    if (sorted[0][good] === 0) return;
+
+    const topValue = sorted[0][good];
+    const topPlayers = sorted.filter((p) => p[good] === topValue);
+
+    if (topPlayers.length === 1) {
+      // Király
+      sorted[0].royalBonus += kingBonus;
+
+      // Királynő
+      if (sorted[1] && sorted[1][good] > 0) {
+        const Qvalue = sorted[1][good];
+        const topQs = sorted.filter((q) => q[good] === Qvalue);
+
+        if (topQs.length > 1) {
+          const splitQ = Math.floor(queenBonus / topQs.length);
+          topQs.forEach((q) => {
+            q.queenBonus += splitQ;
+          });
+        } else {
+          sorted[1].queenBonus += queenBonus;
+        }
+      }
+    } else {
+      // Holtverseny az első helyen
+      const totalBonus = kingBonus + queenBonus;
+      const split = Math.floor(totalBonus / topPlayers.length);
+      topPlayers.forEach((p) => {
+        p.royalBonus += split;
+      });
+    }
+  }
 
   useEffect(() => {
     const data = JSON.parse(localStorage.getItem("playersData")) || [];
+    setPlayerCount(data.length);
 
     // Alap pontszám számítása
     let calculated = data.map((p) => {
@@ -26,62 +78,9 @@ export default function Results() {
       };
     });
 
-    // --- BÓNUSZOK KIOSZTÁSA ---
-    const goods = ["apple", "cheese", "bread", "chicken"];
-
-    goods.forEach((good) => {
-      const sorted = [...calculated].sort((a, b) => b[good] - a[good]);
-      if (good == "apple" && sorted.length > 1) {
-        if (
-          sorted[0][good] == sorted[1][good] &&
-          sorted[0][good] > 0 &&
-          sorted[1][good] > 0
-        ) {
-          sorted[0].royalBonus += 15;
-          sorted[1].royalBonus += 15;
-        } else {
-          if (sorted[0][good] != sorted[1][good] && sorted[0][good] > 0) {
-            sorted[0].royalBonus += 20;
-          }
-          if (sorted[0][good] != sorted[1][good] && sorted[1][good] > 0) {
-            sorted[1].queenBonus += 10;
-          }
-        }
-      }
-      if (good == "cheese" || (good == "bread" && sorted.length > 1)) {
-        if (
-          sorted[0][good] == sorted[1][good] &&
-          sorted[0][good] > 0 &&
-          sorted[1][good] > 0
-        ) {
-          sorted[0].royalBonus += 12.5;
-          sorted[1].royalBonus += 12.5;
-        } else {
-          if (sorted[0][good] != sorted[1][good] && sorted[0][good] > 0) {
-            sorted[0].royalBonus += 15;
-          }
-          if (sorted[0][good] != sorted[1][good] && sorted[1][good] > 0) {
-            sorted[1].queenBonus += 10;
-          }
-        }
-      }
-      if (good == "chicken" && sorted.length > 1) {
-        if (
-          sorted[0][good] == sorted[1][good] &&
-          sorted[0][good] > 0 &&
-          sorted[1][good] > 0
-        ) {
-          sorted[0].royalBonus += 7.5;
-          sorted[1].royalBonus += 7.5;
-        } else {
-          if (sorted[0][good] != sorted[1][good] && sorted[0][good] > 0) {
-            sorted[0].royalBonus += 10;
-          }
-          if (sorted[0][good] != sorted[1][good] && sorted[1][good] > 0) {
-            sorted[1].queenBonus += 5;
-          }
-        }
-      }
+    //BÓNUSZOK KIOSZTÁSA
+    Object.entries(bonusConfig).forEach(([good, bonuses]) => {
+      applyBonuses(calculated, good, bonuses.king, bonuses.queen);
     });
 
     calculated = calculated.map((p) => ({
