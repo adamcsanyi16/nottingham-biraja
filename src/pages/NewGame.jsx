@@ -36,7 +36,7 @@ export default function NewGame() {
         chicken: 0,
         money: 0,
         contraband: 0,
-      }))
+      })),
     );
   }
 
